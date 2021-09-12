@@ -1,0 +1,20 @@
+# Config file for [Air](https://github.com/cosmtrek/air) in TOML format
+
+# Working directory
+# . or absolute path, please note that the directories following must be under root.
+root = "."
+tmp_dir = "bin/tmp"
+
+[build]
+cmd = "make"
+bin = "bin/jsonnet-playground"
+full_bin = "./bin/jsonnet-playground"
+include_ext = ["go"]
+
+[log]
+# Show log time
+time = false
+
+[misc]
+# Delete tmp directory on exit
+clean_on_exit = true
