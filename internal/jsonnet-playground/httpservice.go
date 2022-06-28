@@ -22,16 +22,17 @@ import (
 
 	// Place any extra imports for your service code here
 	///Block(imports)
-	// Used by ent
 	entsql "entgo.io/ent/dialect/sql"
 	logrusmiddleware "github.com/dictyBase/go-middlewares/middlewares/logrus"
+
+	// Used by ent
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/rs/cors"
 	///EndBlock(imports)
 )
 
-func createDBConnection(databaseUrl string) (*ent.Client, error) {
-	db, err := sql.Open("pgx", databaseUrl)
+func createDBConnection(databaseURL string) (*ent.Client, error) {
+	db, err := sql.Open("pgx", databaseURL)
 	if err != nil {
 		return nil, err
 	}
@@ -208,14 +209,14 @@ func (s *PublicHTTPService) getCode(w http.ResponseWriter, req *http.Request) {
 		web.SendErrorResponse(w, errors.Wrap(err, "failed to parse id"), http.StatusBadRequest)
 	}
 
-	code, err := s.db.Code.Get(req.Context(), id)
+	c, err := s.db.Code.Get(req.Context(), id)
 	if err != nil {
 		web.SendErrorResponse(w, errors.Wrap(err, "failed to get code"), http.StatusBadRequest)
 		return
 	}
 
 	web.SendResponse(w, web.GetCodeResponse{
-		Contents: code.Contents,
+		Contents: c.Contents,
 	})
 }
 
@@ -234,7 +235,7 @@ func (s *PublicHTTPService) executeCode(w http.ResponseWriter, rawReq *http.Requ
 	vm := jsonnet.MakeVM()
 	// The first param is a filename for when an error is output. As we are doing this all in memory
 	// having a filename returned for an error would likely just be confusing to a user.
-	out, err := vm.EvaluateSnippet("", req.Contents)
+	out, err := vm.EvaluateAnonymousSnippet("", req.Contents)
 	if err != nil {
 		web.SendErrorResponse(w, errors.Wrap(err, "failed to evaluate code"), http.StatusBadRequest)
 		return
