@@ -1,0 +1,22 @@
+name: recycle
+
+on:
+  schedule:
+    # At minute 30 past hour 5 and 17.
+    # https://crontab.guru/#30_5,17_*_*_*
+    - cron: "30 5,17 * * *"
+
+jobs:
+  clean-ghcr:
+    name: Delete old detached commit images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: snok/container-retention-policy@v1
+        with:
+          image-names: ${{ github.repository }}
+          cut-off: One month ago UTC
+          timestamp-to-use: updated_at
+          account-type: org
+          org-name: rgst-io
+          skip-tags: v*
+          token: ${{ secrets.GH_PAT }}
