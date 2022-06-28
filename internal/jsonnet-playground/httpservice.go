@@ -11,9 +11,11 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect"
+	"github.com/google/go-jsonnet"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/jaredallard/jsonnet-playground/ent"
+	"github.com/jaredallard/jsonnet-playground/ent/code"
 	"github.com/jaredallard/jsonnet-playground/pkg/web"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -24,6 +26,7 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	logrusmiddleware "github.com/dictyBase/go-middlewares/middlewares/logrus"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/rs/cors"
 	///EndBlock(imports)
 )
 
@@ -106,15 +109,32 @@ func (s *PublicHTTPService) Run(ctx context.Context, log logrus.FieldLogger) err
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/api/v1/code", s.saveCode).Methods("POST")
-	r.HandleFunc("/api/v1/code/{id}", s.getCode).Methods("GET")
+	api := r.PathPrefix("/api/v1/").Subrouter()
 
-	spa := spaHandler{staticPath: "static", indexPath: "index.html"}
+	// Api middleware
+	api.Use(cors.New(cors.Options{
+		AllowedOrigins:     []string{"*"},
+		AllowedMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:     []string{"Content-Type"},
+		OptionsPassthrough: false,
+	}).Handler, logrusmiddleware.NewJSONLogger().Middleware)
+
+	// Api Methods
+	api.HandleFunc("/code", s.saveCode).Methods("OPTIONS", "POST")
+	api.HandleFunc("/code/{id}", s.getCode).Methods("OPTIONS", "GET")
+	api.HandleFunc("/execute", s.executeCode).Methods("OPTIONS", "POST")
+
+	// Serve the SPA
+	api.PathPrefix("/").Handler(http.NotFoundHandler())
+
+	spa := spaHandler{staticPath: "web/out", indexPath: "index.html"}
+
+	// Serve the Vue app
 	r.PathPrefix("/").Handler(spa)
 
 	addr := fmt.Sprintf("%s:%d", s.conf.HTTPAddress, s.conf.HTTPPort)
 	serv := &http.Server{
-		Handler:      logrusmiddleware.NewJSONLogger().Middleware(r),
+		Handler:      r,
 		Addr:         addr,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
@@ -157,9 +177,16 @@ func (s *PublicHTTPService) saveCode(w http.ResponseWriter, rawReq *http.Request
 		return
 	}
 
-	newCode, err := s.db.Code.Create().SetContents(req.Contents).Save(rawReq.Context())
-	if err != nil {
-		web.SendErrorResponse(w, errors.Wrap(err, "failed to save"), http.StatusBadRequest)
+	newCode, err := s.db.Code.Query().Where(code.ContentsEQ(req.Contents)).Only(rawReq.Context())
+	if ent.IsNotFound(err) {
+		// if it doesn't already exist, create a new entry
+		if newCode, err = s.db.Code.Create().
+			SetContents(req.Contents).Save(rawReq.Context()); err != nil {
+			web.SendErrorResponse(w, errors.Wrap(err, "failed to save"), http.StatusBadRequest)
+			return
+		}
+	} else if err != nil {
+		web.SendErrorResponse(w, errors.Wrap(err, "failed to query"), http.StatusBadRequest)
 		return
 	}
 
@@ -189,5 +216,31 @@ func (s *PublicHTTPService) getCode(w http.ResponseWriter, req *http.Request) {
 
 	web.SendResponse(w, web.GetCodeResponse{
 		Contents: code.Contents,
+	})
+}
+
+func (s *PublicHTTPService) executeCode(w http.ResponseWriter, rawReq *http.Request) {
+	req := web.SaveCodeRequest{}
+	if err := json.NewDecoder(rawReq.Body).Decode(&req); err != nil {
+		web.SendErrorResponse(w, errors.Wrap(err, "failed to decode body"), http.StatusBadRequest)
+		return
+	}
+
+	if req.Contents == "" {
+		web.SendErrorResponse(w, fmt.Errorf("missing contents"), http.StatusBadRequest)
+		return
+	}
+
+	vm := jsonnet.MakeVM()
+	// The first param is a filename for when an error is output. As we are doing this all in memory
+	// having a filename returned for an error would likely just be confusing to a user.
+	out, err := vm.EvaluateSnippet("", req.Contents)
+	if err != nil {
+		web.SendErrorResponse(w, errors.Wrap(err, "failed to evaluate code"), http.StatusBadRequest)
+		return
+	}
+
+	web.SendResponse(w, web.ExecuteResponse{
+		Output: out,
 	})
 }

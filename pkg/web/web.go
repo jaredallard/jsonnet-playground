@@ -26,6 +26,12 @@ type GetCodeResponse struct {
 	Contents string `json:"contents"`
 }
 
+// ExecuteResponse is the response sent when executing code
+type ExecuteResponse struct {
+	// Output is the response from executing this code
+	Output string `json:"output"`
+}
+
 // ErrorResponse is the response sent when an error occurs
 type ErrorResponse struct {
 	// Message is the error message, aka reason

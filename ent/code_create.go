@@ -32,6 +32,14 @@ func (cc *CodeCreate) SetID(u uuid.UUID) *CodeCreate {
 	return cc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (cc *CodeCreate) SetNillableID(u *uuid.UUID) *CodeCreate {
+	if u != nil {
+		cc.SetID(*u)
+	}
+	return cc
+}
+
 // Mutation returns the CodeMutation object of the builder.
 func (cc *CodeCreate) Mutation() *CodeMutation {
 	return cc.mutation
@@ -112,11 +120,11 @@ func (cc *CodeCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (cc *CodeCreate) check() error {
 	if _, ok := cc.mutation.Contents(); !ok {
-		return &ValidationError{Name: "contents", err: errors.New(`ent: missing required field "contents"`)}
+		return &ValidationError{Name: "contents", err: errors.New(`ent: missing required field "Code.contents"`)}
 	}
 	if v, ok := cc.mutation.Contents(); ok {
 		if err := code.ContentsValidator(v); err != nil {
-			return &ValidationError{Name: "contents", err: fmt.Errorf(`ent: validator failed for field "contents": %w`, err)}
+			return &ValidationError{Name: "contents", err: fmt.Errorf(`ent: validator failed for field "Code.contents": %w`, err)}
 		}
 	}
 	return nil
@@ -131,7 +139,11 @@ func (cc *CodeCreate) sqlSave(ctx context.Context) (*Code, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		_node.ID = _spec.ID.Value.(uuid.UUID)
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
 	}
 	return _node, nil
 }
@@ -149,7 +161,7 @@ func (cc *CodeCreate) createSpec() (*Code, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := cc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := cc.mutation.Contents(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

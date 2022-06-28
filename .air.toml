@@ -9,7 +9,9 @@ tmp_dir = "bin/tmp"
 cmd = "make"
 bin = "bin/jsonnet-playground"
 full_bin = "./bin/jsonnet-playground"
-include_ext = ["go"]
+include_ext = ["go", "js"]
+include_dir = ["ent/schema", "pkg", "internal"]
+exclude_dir = ["node_modules", "dist", "build", "ent"]
 
 [log]
 # Show log time
