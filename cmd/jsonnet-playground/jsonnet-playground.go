@@ -20,7 +20,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	log := logrus.New().WithContext(ctx)
 
-	//nolint:gocritic importShadow
+	//nolint:gocritic
 	app := cli.App{
 		Name:    "jsonnet-playground",
 		Version: app.Version,
@@ -62,6 +62,7 @@ func main() {
 
 		// listen for signals that we want to cancel on, and cancel
 		// the context if one is passed
+		//nolint:govet
 		signal.Notify(sigC, os.Interrupt, syscall.SIGTERM)
 		go func() {
 			sig := <-sigC
