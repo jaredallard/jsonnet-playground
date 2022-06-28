@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jaredallard/jsonnet-playground/ent"
+	"github.com/rgst-io/jsonnet-playground/ent"
 )
 
 // The CodeFunc type is an adapter to allow the use of ordinary

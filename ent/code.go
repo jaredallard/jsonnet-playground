@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
 )
 
 // Code is the model entity for the Code schema.

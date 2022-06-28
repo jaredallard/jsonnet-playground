@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
 )
 
 // CodeCreate is the builder for creating a Code entity.

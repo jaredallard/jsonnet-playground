@@ -8,9 +8,9 @@ import (
 	"log"
 
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/migrate"
+	"github.com/rgst-io/jsonnet-playground/ent/migrate"
 
-	"github.com/jaredallard/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

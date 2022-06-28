@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
-	"github.com/jaredallard/jsonnet-playground/ent/predicate"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/predicate"
 
 	"entgo.io/ent"
 )

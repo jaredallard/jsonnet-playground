@@ -14,10 +14,10 @@ import (
 	"github.com/google/go-jsonnet"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/jaredallard/jsonnet-playground/ent"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
-	"github.com/jaredallard/jsonnet-playground/pkg/web"
 	"github.com/pkg/errors"
+	"github.com/rgst-io/jsonnet-playground/ent"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/pkg/web"
 	"github.com/sirupsen/logrus"
 
 	// Place any extra imports for your service code here

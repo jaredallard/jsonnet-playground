@@ -1,4 +1,4 @@
-module github.com/jaredallard/jsonnet-playground
+module github.com/rgst-io/jsonnet-playground
 
 go 1.17
 

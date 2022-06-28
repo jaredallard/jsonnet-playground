@@ -4,8 +4,8 @@ package ent
 
 import (
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
-	"github.com/jaredallard/jsonnet-playground/ent/schema"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/schema"
 )
 
 // The init function reads all schema descriptors with runtime code

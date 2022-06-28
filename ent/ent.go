@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
 )
 
 // ent aliases to avoid import conflicts in user's code.

@@ -5,7 +5,7 @@ package code
 import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/jaredallard/jsonnet-playground/ent/predicate"
+	"github.com/rgst-io/jsonnet-playground/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

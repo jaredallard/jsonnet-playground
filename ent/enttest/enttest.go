@@ -5,9 +5,9 @@ package enttest
 import (
 	"context"
 
-	"github.com/jaredallard/jsonnet-playground/ent"
+	"github.com/rgst-io/jsonnet-playground/ent"
 	// required by schema hooks.
-	_ "github.com/jaredallard/jsonnet-playground/ent/runtime"
+	_ "github.com/rgst-io/jsonnet-playground/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

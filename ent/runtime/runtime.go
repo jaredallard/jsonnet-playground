@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/jaredallard/jsonnet-playground/ent/runtime.go
+// The schema-stitching logic is generated in github.com/rgst-io/jsonnet-playground/ent/runtime.go
 
 const (
 	Version = "(devel)" // Version of ent codegen.

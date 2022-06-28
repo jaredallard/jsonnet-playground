@@ -9,8 +9,8 @@ import (
 	"syscall"
 
 	"github.com/getoutreach/gobox/pkg/app"
-	jsonnetplayground "github.com/jaredallard/jsonnet-playground/internal/jsonnet-playground"
 	"github.com/pkg/errors"
+	jsonnetplayground "github.com/rgst-io/jsonnet-playground/internal/jsonnet-playground"
 	"github.com/sirupsen/logrus"
 	"github.com/tritonmedia/pkg/service"
 	"github.com/urfave/cli/v2"

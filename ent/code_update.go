@@ -10,8 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jaredallard/jsonnet-playground/ent/code"
-	"github.com/jaredallard/jsonnet-playground/ent/predicate"
+	"github.com/rgst-io/jsonnet-playground/ent/code"
+	"github.com/rgst-io/jsonnet-playground/ent/predicate"
 )
 
 // CodeUpdate is the builder for updating Code entities.

@@ -1,5 +1,5 @@
 APP := jsonnet-playground
-ORG := jaredallard
+ORG := rgst-io
 _ := $(shell ./scripts/bootstrap-lib.sh) 
 
 #pre-build:: node-build gogenerate build
