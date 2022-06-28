@@ -1,7 +1,15 @@
 version: "3.8"
 services:
+  app:
+    build: ./
+    env_file: .env.docker-compose
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    restart: always
+
   db:
     image: postgres:14-alpine
-    env_file: .env.development
+    env_file: .env.docker-compose
     ports:
       - 5432:5432
