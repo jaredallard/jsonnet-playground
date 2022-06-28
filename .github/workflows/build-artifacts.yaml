@@ -22,6 +22,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Install Tool Versions
         uses: asdf-vm/actions/install@v1
+      # Setup QEMU to support arm64 image building
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      # Use buildx for multi-arch docker builds and for gh actions
+      # caching.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to GHCR
@@ -48,6 +53,7 @@ jobs:
         with:
           context: .
           push: true
+          platforms: "linux/amd64,linux/arm64"
           build-args: GO_VERSION=${{ steps.go.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
